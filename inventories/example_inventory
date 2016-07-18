@@ -8,6 +8,10 @@ examplecluster_mn01
 examplecluster_mn02
 examplecluster_mn03
 examplecluster_mysql
+examplecluster_openldap
+
+[openldap:children]
+examplecluster_openldap
 
 [datanode:children]
 examplecluster_datanode
@@ -35,6 +39,9 @@ examplecluster_mysql
 exampledn01.example.com
 exampledn02.example.com
 exampledn03.example.com
+
+[examplecluster_openldap]
+examplemn01.example.com
 
 [examplecluster_kdcmaster]
 examplemn01.example.com
