@@ -1,20 +1,38 @@
 ---
 dns_enabled: no
+
 krb_realm: HADOOP.TEST
-krb_domain: vagrant
+krb_domain: eu-west-1.compute.internal
+
+# Mount point location
+# Each worker services will be on both folders
+# eg: /hadoop/0/hdfs, /hadoop/0/yarn, /hadoop/1/hdfs, /hadoop/1/yarn, ...
+# Master services will be split in between 2 mount points ( if there is 2 or more )
+data_dir:
+  - /hadoop/0
+  - /hadoop/1
+
+#logs files are under a common path - for eg: /var/log/hadoop
+#Each individual service log will be underneath = /var/log/hadoop/hdfs, /var/log/hadoop/yarn, ...
+log_dir: /var/log/hadoop
+pid_dir: /var/run/hadoop
+
+# Providing default password for installation ( grafana )
+default_password: admin
+
 #Oracle JDK versions
 #Check roles/oracle-java/tasks/set_vars.yml for allowed values
 java_version: 7
-java_subversion: 75
+java_subversion: 80
 #ambari_version: 2.1.2
-ambari_version: 2.2.0
-mysql_connector_version: 5.1.37
+ambari_version: 2.2.2
+mysql_connector_version: 5.1.39
 mysql_port: 3306
-hdp_stack: 2.3
+hdp_stack: 2.2
 blueprint_file: bare_cluster.bp.j2
 cluster_definition_file: bare_cluster.ct.j2
 #KAFKA, OOZIE and FALCON are optional. Omit them from this list to prevent them being installed
 #blueprint_services: "STORM,KAFKA,HDFS,OOZIE,HIVE,FALCON,MAPREDUCE2,PIG,SQOOP,TEZ,YARN,ZOOKEEPER"
-blueprint_services: "STORM,KAFKA,HDFS,HIVE,MAPREDUCE2,PIG,SQOOP,TEZ,YARN,ZOOKEEPER"
+blueprint_services: "KERBEROS,HDFS,HIVE,MAPREDUCE2,PIG,SQOOP,TEZ,YARN,ZOOKEEPER,OOZIE"
 #Whether to use Ambari Stack recommendations API
 use_ambari_recommendations: yes

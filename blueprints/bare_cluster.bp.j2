@@ -3,7 +3,11 @@
         {
             "hive-env": {
                 "properties": {
-                    "hive_database": "Existing MySQL Database"
+                    "hive_database": "Existing MySQL Database",
+                    "hive_log_dir": "{{ log_dir }}/hive",
+                    "hive_pid_dir": "{{ pid_dir }}/hive",
+                    "hcat_log_dir" : "{{ log_dir }}/webhcat",
+                    "hcat_pid_dir" : "{{ pid_dir }}/webhcat"
                 }
             }
         },
@@ -12,7 +16,7 @@
             "oozie-site" : {
                 "properties" : {
                     "oozie.service.JPAService.jdbc.driver" : "com.mysql.jdbc.Driver",
-                    "oozie.service.JPAService.jdbc.url" : "jdbc:mysql://{{ groups[cluster_name+'_mn03'][0] }}/oozie",
+                    "oozie.service.JPAService.jdbc.url" : "jdbc:mysql://{{ groups[cluster_name+'_mysql'][0] }}/oozie",
                     "oozie.service.JPAService.jdbc.username" : "{{ mysql_oozie_user }}",
                     "oozie.db.schema.name" : "{{ mysql_oozie_database }}"
                 }
@@ -22,11 +26,63 @@
             "oozie-env" : {
                "properties" : {
                    "oozie_hostname" : "{{ groups[cluster_name+'_mn03'][0] }}",
-                   "oozie_database" : "Existing MySQL Database"
+                   "oozie_database" : "Existing MySQL Database",
+                   "oozie_log_dir" : "{{ log_dir }}/oozie",
+                   "oozie_pid_dir" : "{{ pid_dir }}/oozie",
+                   "oozie_data_dir" : "{% if data_dir|length > 1 %}{{data_dir[1]}}/oozie/data" {% else %} {{data_dir[0]}}/oozie/data" {% endif %}
                 }
             }
         },
 {% endif %}
+{% if 'FALCON' in blueprint_services %}
+        {
+            "falcon-env" : {
+               "properties" : {
+                   "falcon_log_dir" : "{{ log_dir }}/falcon",
+                   "falcon_pid_dir" : "{{ pid_dir }}/falcon",
+                   "falcon.emeddedmq.port" : "61616",
+                   "falcon_store_uri" : "file://{{ data_dir[0] }}/falcon/store",
+                   "falcon.embeddedmq.data" : "{{ data_dir[0] }}/falcon/embeddedmq/data"
+                }
+            }
+        },
+{% endif %}
+{% if 'ATLAS' in blueprint_services %}
+        {
+            "atlas-env" : {
+               "properties" : {
+                   "atlas_log_dir" : "{{ log_dir }}/atlas",
+                   "atlas_pid_dir" : "{{ pid_dir }}/atlas",
+                   "metadata_data_dir" : "{% if data_dir|length > 1 %}{{data_dir[1]}}/atlas/data{% else %}{{data_dir[0]}}/atlas/data{% endif %}"
+                }
+            }
+        },
+{% endif %}
+{% if 'SPARK' in blueprint_services %}
+        {
+            "spark-env" : {
+               "properties" : {
+                   "spark_log_dir" : "{{ log_dir }}/spark",
+                   "spark_pid_dir" : "{{ pid_dir }}/spark"
+                }
+            }
+        },
+{% endif %}
+        {
+          "zookeeper-env" : {
+            "properties" : {
+              "zk_log_dir" : "{{ log_dir }}/zookeeper",
+              "zk_pid_dir" : "{{ pid_dir }}/zookeeper"
+            }
+          }
+        },
+        {
+            "zoo.cfg" : {
+              "properties" : {
+                "dataDir" : "{% if data_dir|length > 1 %}{{data_dir[1]}}/zookeeper{% else %}{{data_dir[0]}}/zookeeper{% endif %}"
+              }
+            }
+        },
         {
             "ams-site": {
                 "properties": {
@@ -48,14 +104,16 @@
             "hive-site": {
                 "properties": {
                     "hive.enforce.bucketing": "false",
-                    "javax.jdo.option.ConnectionURL": "jdbc:mysql://{{ groups[cluster_name+'_mn03'][0] }}/hive?createDatabaseIfNotExist=true"
+                    "javax.jdo.option.ConnectionURL": "jdbc:mysql://{{ groups[cluster_name+'_mysql'][0] }}/hive?createDatabaseIfNotExist=true"
                 }
             }
         },
         {
             "yarn-env": {
                 "properties": {
-                    "min_user_id": "1000"
+                    "min_user_id": "1000",
+                    "yarn_log_dir_prefix": "{{ log_dir}}/yarn",
+                    "yarn_pid_dir_prefix": "{{ pid_dir}}/yarn"
                 }
             }
         },
@@ -72,32 +130,60 @@
             }
         },
         {
-            "yarn-site": {
+            "mapred-env": {
                 "properties": {
+                  "mapred_log_dir_prefix" : "{{ log_dir }}/mapreduce",
+                  "mapred_pid_dir_prefix" : "{{ pid_dir }}/mapreduce"
                 }
             }
         },
         {
-            "zoo.cfg": {
-                "properties": {
-                }
+            "yarn-site": {
+              "properties": {
+                "yarn.nodemanager.log-dirs" : "{% for data in data_dir %}{{data}}/yarn/log{% if not loop.last %},{% endif %}{% endfor %}"
+
+                "yarn.nodemanager.local-dirs" : "{% for data in data_dir %}{{data}}/yarn/local{% if not loop.last %},{% endif %}{% endfor %}"
+
+                "yarn.timeline-service.leveldb-state-store.path" : "{{ data_dir[0] }}/yarn/timeline"
+              }
             }
         },
         {
             "hadoop-env": {
                 "properties": {
+                  "hdfs_log_dir_prefix": "{{ log_dir }}/hadoop",
+                  "hadoop_pid_dir_prefix": "{{ pid_dir }}/hadoop"
                 }
             }
         },
+{% if 'ambari_version' == '2.2.2' %}
+        {
+            "grafana-env": {
+                "properties": {
+                  "metrics_grafana_log_dir" : "{{ log_dir }}/ambari-metrics-grafana",
+                  "metrics_grafana_pid_dir" : "{{ pid_dir }}/ambari-metrics-grafana",
+                  "metrics_grafana_data_dir" : "{{ data_dir[0] }}/ambari-metrics-grafana",
+                  "metrics_grafana_username" : "admin"
+                }
+            }
+        },
+{% endif %}
         {
             "ams-env": {
                 "properties": {
+                  "hbase_log_dir" : "{{ log_dir }}/ambari-metrics-collector",
+                  "hbase_pid_dir" : "{{ pid_dir }}/ambari-metrics-collector"
                 }
             }
         },
+
+
         {
             "hdfs-site": {
                 "properties": {
+                  "dfs.namenode.name.dir" : "{{ data_dir[0] }}/hdfs/namenode",
+                  "dfs.namenode.checkpoint.dir" : "{{ data_dir[0] }}/hdfs/namesecondary",
+                  "dfs.datanode.data.dir" : "{% for data in data_dir %}{{data}}/hdfs/data{% if not loop.last %},{% endif %}{% endfor %}"
                 }
             }
         },
@@ -107,12 +193,13 @@
                 }
             }
         }
+
     ],
   "Blueprints" : {
     "stack_name" : "HDP",
     "stack_version" : "{{ hdp_stack }}"
   },
-   "host_groups" : [
+    "host_groups" : [
     {
       "name" : "mn03",
       "configurations" : [ ],
@@ -160,6 +247,11 @@
         {
           "name" : "AMBARI_SERVER"
         },
+  {% if 'ambari_version' == '2.2.2' %}
+        {
+          "name" : "METRICS_GRAFANA"
+        },
+  {% endif %}
         {
           "name" : "SQOOP"
         },
