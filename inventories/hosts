@@ -1,3 +1,12 @@
+ip-172-31-28-83.eu-west-1.compute.internal ansible_ssh_host=ec2-52-50-65-239.eu-west-1.compute.amazonaws.com ansible_ssh_port=22 ansible_ssh_user='centos' ansible_ssh_private_key_file='/Users/orenault/.ssh/orenault.pem'
+ip-172-31-26-161.eu-west-1.compute.internal ansible_ssh_host=ec2-52-51-13-182.eu-west-1.compute.amazonaws.com ansible_ssh_port=22 ansible_ssh_user='centos' ansible_ssh_private_key_file='/Users/orenault/.ssh/orenault.pem'
+ip-172-31-25-65.eu-west-1.compute.internal ansible_ssh_host=ec2-52-208-95-74.eu-west-1.compute.amazonaws.com ansible_ssh_port=22 ansible_ssh_user='centos' ansible_ssh_private_key_file='/Users/orenault/.ssh/orenault.pem'
+ip-172-31-29-124.eu-west-1.compute.internal ansible_ssh_host=ec2-52-31-31-229.eu-west-1.compute.amazonaws.com ansible_ssh_port=22 ansible_ssh_user='centos' ansible_ssh_private_key_file='/Users/orenault/.ssh/orenault.pem'
+ip-172-31-24-174.eu-west-1.compute.internal ansible_ssh_host=ec2-52-17-237-225.eu-west-1.compute.amazonaws.com ansible_ssh_port=22 ansible_ssh_user='centos' ansible_ssh_private_key_file='/Users/orenault/.ssh/orenault.pem'
+ip-172-31-30-68.eu-west-1.compute.internal ansible_ssh_host=ec2-52-208-9-147.eu-west-1.compute.amazonaws.com ansible_ssh_port=22 ansible_ssh_user='centos' ansible_ssh_private_key_file='/Users/orenault/.ssh/orenault.pem'
+ip-172-31-20-3.eu-west-1.compute.internal ansible_ssh_host=ec2-52-30-170-179.eu-west-1.compute.amazonaws.com ansible_ssh_port=22 ansible_ssh_user='centos' ansible_ssh_private_key_file='/Users/orenault/.ssh/orenault.pem'
+
+
 # Build a heirachy of groups. This way we can run the playbook across a directory cluster inventory files
 # without the risk of hitting several clusters at once.
 [hdptest:children]
@@ -8,6 +17,7 @@ hdptest_mn01
 hdptest_mn02
 hdptest_mn03
 hdptest_mysql
+hdptest_openldap
 
 [datanode:children]
 hdptest_datanode
@@ -35,28 +45,28 @@ hdptest_mysql
 
 # Node definitions begin here
 [hdptest_datanode]
-datanode01
-datanode02
-datanode03
-datanode04
+ip-172-31-28-83.eu-west-1.compute.internal
+ip-172-31-26-161.eu-west-1.compute.internal
+ip-172-31-25-65.eu-west-1.compute.internal
+ip-172-31-29-124.eu-west-1.compute.internal
 
 [hdptest_openldap]
-master03
+ip-172-31-20-3.eu-west-1.compute.internal
 
 [hdptest_kdcmaster]
-master03
+ip-172-31-20-3.eu-west-1.compute.internal
 
 [hdptest_ambariserver]
-master03
+ip-172-31-20-3.eu-west-1.compute.internal
 
 [hdptest_mn01]
-master01
+ip-172-31-24-174.eu-west-1.compute.internal
 
 [hdptest_mn02]
-master02
+ip-172-31-30-68.eu-west-1.compute.internal
 
 [hdptest_mn03]
-master03
+ip-172-31-20-3.eu-west-1.compute.internal
 
 [hdptest_mysql]
-master02
+ip-172-31-30-68.eu-west-1.compute.internal
