@@ -140,9 +140,9 @@
         {
             "yarn-site": {
               "properties": {
-                "yarn.nodemanager.log-dirs" : "{% for data in data_dir %}{{data}}/yarn/log{% if not loop.last %},{% endif %}{% endfor %}"
+                "yarn.nodemanager.log-dirs" : "{% for data in data_dir %}{{data}}/yarn/log{% if not loop.last %},{% endif %}{% endfor %}",
 
-                "yarn.nodemanager.local-dirs" : "{% for data in data_dir %}{{data}}/yarn/local{% if not loop.last %},{% endif %}{% endfor %}"
+                "yarn.nodemanager.local-dirs" : "{% for data in data_dir %}{{data}}/yarn/local{% if not loop.last %},{% endif %}{% endfor %}",
 
                 "yarn.timeline-service.leveldb-state-store.path" : "{{ data_dir[0] }}/yarn/timeline"
               }
