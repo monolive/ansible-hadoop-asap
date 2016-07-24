@@ -28,7 +28,7 @@ java_subversion: 80
 ambari_version: 2.2.2
 mysql_connector_version: 5.1.39
 mysql_port: 3306
-hdp_stack: 2.2
+hdp_stack: 2.4
 blueprint_file: bare_cluster.bp.j2
 cluster_definition_file: bare_cluster.ct.j2
 #KAFKA, OOZIE and FALCON are optional. Omit them from this list to prevent them being installed
