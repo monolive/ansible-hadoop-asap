@@ -20,7 +20,7 @@
       "name" : "mn01", 
       "hosts" : [         
         {
-          "fqdn" : "{{ groups[cluster_name+'_mn01'][0] }}"
+          "fqdn" : "{{ groups[cluster_name+'_mn01'][0]['ansible_fqdn'] }}"
         }
       ]
     },
@@ -28,7 +28,7 @@
       "name" : "mn02", 
       "hosts" : [         
         {
-          "fqdn" : "{{ groups[cluster_name+'_mn02'][0] }}"
+          "fqdn" : "{{ groups[cluster_name+'_mn02'][0]['ansible_fqdn'] }}"
         }
       ]
     },
@@ -36,14 +36,14 @@
       "name" : "mn03", 
       "hosts" : [         
         {
-          "fqdn" : "{{ groups[cluster_name+'_mn03'][0] }}"
+          "fqdn" : "{{ groups[cluster_name+'_mn03'][0]['ansible_fqdn'] }}"
         }
       ]
     },
     {
       "name" : "datanode", 
       "hosts" : [         
-          {% for host in groups[cluster_name+'_datanode'] %}
+          {% for host in groups[cluster_name+'_datanode']['ansible_fqdn'] %}
         {
           "fqdn" : "{{ host }}"
         }

@@ -16,7 +16,7 @@
             "oozie-site" : {
                 "properties" : {
                     "oozie.service.JPAService.jdbc.driver" : "com.mysql.jdbc.Driver",
-                    "oozie.service.JPAService.jdbc.url" : "jdbc:mysql://{{ groups[cluster_name+'_mysql'][0] }}/oozie",
+                    "oozie.service.JPAService.jdbc.url" : "jdbc:mysql://{{ groups[cluster_name+'_mysql'][0]['ansible_fqdn'] }}/oozie",
                     "oozie.service.JPAService.jdbc.username" : "{{ mysql_oozie_user }}",
                     "oozie.db.schema.name" : "{{ mysql_oozie_database }}"
                 }
@@ -25,7 +25,7 @@
         {
             "oozie-env" : {
                "properties" : {
-                   "oozie_hostname" : "{{ groups[cluster_name+'_mn03'][0] }}",
+                   "oozie_hostname" : "{{ groups[cluster_name+'_mn03'][0]['ansible_fqdn'] }}",
                    "oozie_database" : "Existing MySQL Database",
                    "oozie_log_dir" : "{{ log_dir }}/oozie",
                    "oozie_pid_dir" : "{{ pid_dir }}/oozie",
@@ -94,9 +94,9 @@
                 "properties": {
                     "hadoop.proxyuser.hive.groups": "*",
                     "hadoop.proxyuser.hdfs.groups": "*",
-                    "hadoop.proxyuser.hcat.hosts": "{{ groups[cluster_name+'_mn03'][0] }}",
+                    "hadoop.proxyuser.hcat.hosts": "{{ groups[cluster_name+'_mn03'][0]['ansible_fqdn'] }}",
                     "hadoop.proxyuser.hdfs.hosts": "*",
-                    "hadoop.proxyuser.hive.hosts": "{{ groups[cluster_name+'_mn03'][0] }}"
+                    "hadoop.proxyuser.hive.hosts": "{{ groups[cluster_name+'_mn03'][0]['ansible_fqdn'] }}"
                 }
             }
         },
@@ -104,7 +104,7 @@
             "hive-site": {
                 "properties": {
                     "hive.enforce.bucketing": "false",
-                    "javax.jdo.option.ConnectionURL": "jdbc:mysql://{{ groups[cluster_name+'_mysql'][0] }}/hive?createDatabaseIfNotExist=true"
+                    "javax.jdo.option.ConnectionURL": "jdbc:mysql://{{ groups[cluster_name+'_mysql'][0]['ansible_fqdn'] }}/hive?createDatabaseIfNotExist=true"
                 }
             }
         },
