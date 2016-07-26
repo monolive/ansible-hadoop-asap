@@ -156,7 +156,7 @@
                 }
             }
         },
-{% if 'ambari_version' >= '2.2.2' && 'hdp_stack' >= '2.4' %}
+{% if 'ambari_version' >= '2.2.2' and 'hdp_stack' >= '2.4' %}
         {
             "grafana-env": {
                 "properties": {
@@ -241,12 +241,12 @@
           "name" : "SPARK_CLIENT"
         },
 {% endif %}
-{% if 'ZEPPELIN' in blueprint_services && 'hdp_stack' == '2.5' %}
+{% if 'ZEPPELIN' in blueprint_services and 'hdp_stack' == '2.5' %}
         {
           "name" : "ZEPPELIN_MASTER"
         },
 {% endif %}
-{% if 'LOGSEARCH' in blueprint_services && 'hdp_stack' == '2.5' && 'ambari_version' == '2.4.0' %}
+{% if 'LOGSEARCH' in blueprint_services and 'hdp_stack' == '2.5' and 'ambari_version' == '2.4.0' %}
         {
           "name" : "LOGSEARCH_SERVER"
         },
