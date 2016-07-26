@@ -156,7 +156,7 @@
                 }
             }
         },
-{% if 'ambari_version' == '2.2.2' %}
+{% if 'ambari_version' >= '2.2.2' && 'hdp_stack' >= '2.4' %}
         {
             "grafana-env": {
                 "properties": {
@@ -224,6 +224,40 @@
         },
         {
           "name" : "OOZIE_CLIENT"
+        },
+{% endif %}
+{% if 'ATLAS' in blueprint_services %}
+        {
+          "name" : "ATLAS_SERVER"
+        },
+{% if 'hdp_stack' == '2.5' %}
+        {
+          "name" : "ATLAS_CLIENT"
+        },
+{% endif %}        
+{% endif %}
+{% if 'SPARK' in blueprint_services %}
+        {
+          "name" : "SPARK_CLIENT"
+        },
+{% endif %}
+{% if 'ZEPPELIN' in blueprint_services && 'hdp_stack' == '2.5' %}
+        {
+          "name" : "ZEPPELIN_MASTER"
+        },
+{% endif %}
+{% if 'LOGSEARCH' in blueprint_services && 'hdp_stack' == '2.5' && 'ambari_version' == '2.4.0' %}
+        {
+          "name" : "LOGSEARCH_SERVER"
+        },
+        {
+          "name" : "LOGSEARCH_LOGFEEDER"
+        },
+        {
+          "name" : "LOGSEARCH_SOLR"
+        },
+        {
+          "name" : "LOGSEARCH_SOLR_CLIENT"
         },
 {% endif %}
         {
@@ -398,6 +432,20 @@
           "name" : "STORM_UI_SERVER"
         },
 {% endif %}
+{% if 'SPARK' in blueprint_services  %}
+{% if 'hdp_stack' == '2.5'  %}
+        {
+          "name" : "LIVY_SERVER"
+        },
+{% endif %}
+        {
+          "name" : "SPARK_JOBHISTORYSERVER"
+        },
+        {
+          "name" : "SPARK_THRIFTSERVER"
+        },
+{% endif %}
+
         {
           "name" : "PIG"
         },
